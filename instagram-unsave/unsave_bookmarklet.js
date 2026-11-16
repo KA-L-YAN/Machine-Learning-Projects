@@ -39,7 +39,7 @@
         { headers: H, credentials: 'include' });
       if (!r.ok) throw new Error('HTTP ' + r.status);
       const j = await r.json();
-      for (const it of j.items || []) if (it.media && it.media.pk) ids.push(String(it.media.pk));
+      for (const it of j.items || []) if (it.media && it.media.pk) ids.push({ id: String(it.media.id || it.media.pk), pk: String(it.media.pk) });
       status('Counting your saved posts… ' + ids.length);
       if (!j.more_available || !j.next_max_id) break;
       maxId = j.next_max_id;
@@ -55,17 +55,21 @@
   const go = $('us_go');
   go.disabled = false; go.style.opacity = 1;
 
-  async function unsave(pk) {
-    for (const url of ['/api/v1/web/save/' + pk + '/unsave/', '/web/save/' + pk + '/unsave/']) {
+  let lastErr = '';
+  async function unsave(m) {
+    const urls = ['/api/v1/media/' + m.id + '/unsave/', '/api/v1/web/save/' + m.pk + '/unsave/', '/web/save/' + m.pk + '/unsave/'];
+    for (const url of urls) {
       const r = await fetch(url, {
-        method: 'POST', credentials: 'include',
+        method: 'POST', credentials: 'include', body: '',
         headers: Object.assign({ 'Content-Type': 'application/x-www-form-urlencoded' }, H),
       });
-      if (r.status === 404) continue;
       if (r.status === 429) throw new Error('rate');
-      const j = await r.json().catch(() => ({}));
+      const text = await r.text();
+      let j = {};
+      try { j = JSON.parse(text); } catch (e) {}
       if (j.feedback_required || j.spam) throw new Error('rate');
-      return r.ok && j.status === 'ok';
+      if (r.ok && j.status === 'ok') return true;
+      lastErr = url.split('/').slice(0, 4).join('/') + ' → HTTP ' + r.status + ' ' + (j.message || text.slice(0, 80).replace(/<[^>]*>/g, ''));
     }
     return false;
   }
@@ -84,9 +88,13 @@
       }
       $('us_b').style.width = ((i + 1) / ids.length * 100) + '%';
       status('Unsaved ' + done + ' of ' + ids.length + (failed ? ' (' + failed + ' failed)' : '') + '… keep this tab open.');
+      if (done === 0 && failed >= 3) {
+        status('Unsave is not working. Error: ' + lastErr + ' (send Claude a screenshot of this).');
+        stop = true; break;
+      }
       await sleep(1500 + Math.random() * 1500);
     }
-    if (!/limiting/.test($('us_s').textContent))
+    if (!/limiting|not working/.test($('us_s').textContent))
       status((stop ? 'Stopped. ' : 'Done. ') + 'Unsaved ' + done + ' post' + (done === 1 ? '' : 's') + (failed ? ', ' + failed + ' failed' : '') + '. Reload to check, and run again if any are left.');
     $('us_x').textContent = 'Close';
     $('us_x').onclick = () => box.remove();
