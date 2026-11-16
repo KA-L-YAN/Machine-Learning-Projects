@@ -1,0 +1,99 @@
+<title>Saved Posts Cleaner</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@600;700&display=swap">
+<style>
+/* Single narrow column, phone-first: steps read top to bottom, one copy action up top */
+:root{--bg:#f6f5f9;--surface:#ffffff;--fg:#17151c;--muted:#5d5867;--line:#e2dfe8;--accent:#c1356b;--accent-fg:#ffffff;--warn-bg:#fff4e0;--warn-fg:#6b4a00;
+--display:"Space Grotesk",system-ui,sans-serif;--body:"Inter",system-ui,-apple-system,sans-serif;--mono:ui-monospace,SFMono-Regular,Menlo,monospace}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#141218;--surface:#1e1b24;--fg:#efedf3;--muted:#a49fae;--line:#33303b;--accent:#ec6b9b;--accent-fg:#1a0a11;--warn-bg:#3a2e12;--warn-fg:#f3d79a;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#141218;--surface:#1e1b24;--fg:#efedf3;--muted:#a49fae;--line:#33303b;--accent:#ec6b9b;--accent-fg:#1a0a11;--warn-bg:#3a2e12;--warn-fg:#f3d79a;color-scheme:dark}
+body{background:var(--bg);color:var(--fg);font:16px/1.55 var(--body);padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:28px 48px}
+main{max-width:560px;margin:0 auto;display:flex;flex-direction:column;gap:22px}
+h1{font:700 30px/1.15 var(--display);margin:0;text-wrap:balance;letter-spacing:-.01em}
+h2{font:600 19px/1.3 var(--display);margin:0 0 10px}
+p{margin:0}
+.lede{color:var(--muted)}
+.copy{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px;display:flex;flex-direction:column;gap:12px}
+button{font:600 16px var(--body);padding:14px;border:0;border-radius:10px;background:var(--accent);color:var(--accent-fg);cursor:pointer}
+button:focus-visible{outline:3px solid var(--fg);outline-offset:2px}
+textarea{width:100%;box-sizing:border-box;height:72px;font:12px/1.4 var(--mono);color:var(--muted);background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:8px;resize:none}
+.tabs{display:flex;gap:6px;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:4px}
+.tabs button{flex:1;padding:10px;background:transparent;color:var(--muted);font-size:15px}
+.tabs button[aria-selected="true"]{background:var(--accent);color:var(--accent-fg)}
+ol{margin:0;padding-left:22px;display:flex;flex-direction:column;gap:10px}
+li::marker{font-weight:600;color:var(--accent)}
+b{font-weight:600}
+code{font:14px var(--mono);background:var(--surface);border:1px solid var(--line);border-radius:5px;padding:1px 5px}
+.note{background:var(--warn-bg);color:var(--warn-fg);border-radius:12px;padding:14px 16px;font-size:15px}
+.note ul{margin:6px 0 0;padding-left:20px;display:flex;flex-direction:column;gap:4px}
+#copied{font-size:14px;color:var(--muted);min-height:1.2em;text-align:center}
+</style>
+<main>
+  <header style="display:flex;flex-direction:column;gap:8px">
+    <h1>Saved Posts Cleaner</h1>
+    <p class="lede">Unsaves every post in your Instagram <b>Saved</b> list from your phone's browser. Saved audio and music aren't touched. It runs inside instagram.com where you're already logged in, so you never type your password here.</p>
+  </header>
+
+  <section class="copy">
+    <h2 style="margin:0">Step 1: Copy the button code</h2>
+    <button id="copyBtn" type="button">Copy code</button>
+    <div id="copied" aria-live="polite"></div>
+    <textarea id="code" readonly aria-label="Bookmarklet code"></textarea>
+  </section>
+
+  <section>
+    <h2>Step 2: Save it as a bookmark</h2>
+    <div class="tabs" role="tablist">
+      <button id="tab-ios" role="tab" aria-selected="true" type="button">iPhone (Safari)</button>
+      <button id="tab-and" role="tab" aria-selected="false" type="button">Android (Chrome)</button>
+    </div>
+    <div id="ios" style="margin-top:14px">
+      <ol>
+        <li>On this page, tap <b>Share</b> → <b>Add Bookmark</b>. Name it <code>Unsave</code> and save.</li>
+        <li>Tap the <b>Bookmarks</b> icon → <b>Edit</b> → tap <b>Unsave</b>.</li>
+        <li>Clear the address field, paste the copied code, tap <b>Done</b>.</li>
+        <li>Open <b>instagram.com</b> in Safari and log in. If it jumps to the app, long-press the link and choose <b>Open</b>, or type it in the address bar.</li>
+        <li>Tap <b>Bookmarks</b> → <b>Unsave</b>. A panel appears at the bottom. Tap <b>Unsave all</b>.</li>
+      </ol>
+    </div>
+    <div id="and" hidden style="margin-top:14px">
+      <ol>
+        <li>On this page, tap <b>⋮</b> → the <b>☆ star</b> to bookmark it.</li>
+        <li>Tap <b>⋮</b> → <b>Bookmarks</b>, find the new bookmark, tap its <b>⋮</b> → <b>Edit</b>.</li>
+        <li>Rename it <code>Unsave</code>. Clear the URL field, paste the copied code, go back to save.</li>
+        <li>Open <b>www.instagram.com</b> in Chrome and log in.</li>
+        <li>Tap the address bar, type <code>Unsave</code>, and tap the bookmark suggestion (it starts with <code>javascript:</code>). Tapping the bookmark from the Bookmarks list doesn't run it on Android. Then tap <b>Unsave all</b>.</li>
+      </ol>
+    </div>
+  </section>
+
+  <div class="note">
+    <b>Before you start</b>
+    <ul>
+      <li>It waits about 2–3 seconds per post, so 300 posts take about 15 minutes. Keep the tab open and the screen on.</li>
+      <li>If Instagram starts limiting requests, it stops on its own. Wait an hour and run it again; it picks up whatever is left.</li>
+      <li>This uses Instagram's unofficial web API, so it could stop working if Instagram changes things.</li>
+    </ul>
+  </div>
+</main>
+<script>
+const CODE = "javascript:(async%20()%20%3D%3E%20%7Bif%20(!%2F(%5E%7C%5C.)instagram%5C.com%24%2F.test(location.hostname))%20%7Balert('Open%20instagram.com%20in%20this%20browser%2C%20log%20in%2C%20then%20run%20this%20again.')%3Breturn%3B%7Dif%20(document.getElementById('us_box'))%20return%3Bconst%20csrf%20%3D%20(document.cookie.match(%2Fcsrftoken%3D(%5B%5E%3B%5D%2B)%2F)%20%7C%7C%20%5B%5D)%5B1%5D%20%7C%7C%20''%3Bconst%20H%20%3D%20%7B%20'X-IG-App-ID'%3A%20'936619743392459'%2C%20'X-CSRFToken'%3A%20csrf%2C%20'X-Requested-With'%3A%20'XMLHttpRequest'%20%7D%3Bconst%20sleep%20%3D%20ms%20%3D%3E%20new%20Promise(r%20%3D%3E%20setTimeout(r%2C%20ms))%3Bconst%20box%20%3D%20document.createElement('div')%3Bbox.id%20%3D%20'us_box'%3Bbox.style.cssText%20%3D%20'position%3Afixed%3Bleft%3A10px%3Bright%3A10px%3Bbottom%3Acalc(10px%20%2B%20env(safe-area-inset-bottom%2C0px))%3Bz-index%3A2147483647%3Bbackground%3A%23fff%3Bcolor%3A%23111%3Bborder-radius%3A14px%3Bpadding%3A16px%3Bfont%3A15px%2F1.4%20-apple-system%2Csystem-ui%2Csans-serif%3Bbox-shadow%3A0%206px%2030px%20rgba(0%2C0%2C0%2C.35)'%3Bconst%20btn%20%3D%20'flex%3A1%3Bpadding%3A12px%3Bborder%3A0%3Bborder-radius%3A10px%3Bfont%3A600%2015px%20system-ui%3B'%3Bbox.innerHTML%20%3D'%3Cdiv%20style%3D%22font-weight%3A700%3Bfont-size%3A16px%22%3EUnsave%20saved%20posts%3C%2Fdiv%3E'%20%2B'%3Cdiv%20id%3D%22us_s%22%20style%3D%22margin%3A8px%200%2010px%22%3ECounting%20your%20saved%20posts%E2%80%A6%3C%2Fdiv%3E'%20%2B'%3Cdiv%20style%3D%22height%3A8px%3Bbackground%3A%23eee%3Bborder-radius%3A4px%3Boverflow%3Ahidden%22%3E%3Cdiv%20id%3D%22us_b%22%20style%3D%22height%3A100%25%3Bwidth%3A0%3Bbackground%3A%230095f6%3Btransition%3Awidth%20.3s%22%3E%3C%2Fdiv%3E%3C%2Fdiv%3E'%20%2B'%3Cdiv%20style%3D%22display%3Aflex%3Bgap%3A8px%3Bmargin-top%3A12px%22%3E'%20%2B'%3Cbutton%20id%3D%22us_go%22%20disabled%20style%3D%22'%20%2B%20btn%20%2B%20'background%3A%230095f6%3Bcolor%3A%23fff%3Bopacity%3A.5%22%3EUnsave%20all%3C%2Fbutton%3E'%20%2B'%3Cbutton%20id%3D%22us_x%22%20style%3D%22'%20%2B%20btn%20%2B%20'background%3A%23efefef%3Bcolor%3A%23111%22%3EClose%3C%2Fbutton%3E%3C%2Fdiv%3E'%3Bdocument.body.appendChild(box)%3Bconst%20%24%20%3D%20id%20%3D%3E%20document.getElementById(id)%3Bconst%20status%20%3D%20t%20%3D%3E%20(%24('us_s').textContent%20%3D%20t)%3Blet%20stop%20%3D%20false%3B%24('us_x').onclick%20%3D%20()%20%3D%3E%20%7B%20stop%20%3D%20true%3B%20box.remove()%3B%20%7D%3Bconst%20ids%20%3D%20%5B%5D%3Btry%20%7Blet%20maxId%20%3D%20''%3Bfor%20(let%20page%20%3D%200%3B%20page%20%3C%20500%3B%20page%2B%2B)%20%7Bconst%20r%20%3D%20await%20fetch('%2Fapi%2Fv1%2Ffeed%2Fsaved%2Fposts%2F'%20%2B%20(maxId%20%3F%20'%3Fmax_id%3D'%20%2B%20encodeURIComponent(maxId)%20%3A%20'')%2C%7B%20headers%3A%20H%2C%20credentials%3A%20'include'%20%7D)%3Bif%20(!r.ok)%20throw%20new%20Error('HTTP%20'%20%2B%20r.status)%3Bconst%20j%20%3D%20await%20r.json()%3Bfor%20(const%20it%20of%20j.items%20%7C%7C%20%5B%5D)%20if%20(it.media%20%26%26%20it.media.pk)%20ids.push(String(it.media.pk))%3Bstatus('Counting%20your%20saved%20posts%E2%80%A6%20'%20%2B%20ids.length)%3Bif%20(!j.more_available%20%7C%7C%20!j.next_max_id)%20break%3BmaxId%20%3D%20j.next_max_id%3Bawait%20sleep(700)%3B%7D%7D%20catch%20(e)%20%7Bstatus('Could%20not%20read%20your%20saved%20posts%20('%20%2B%20e.message%20%2B%20').%20Make%20sure%20you%20are%20logged%20in%20on%20instagram.com%20and%20try%20again.')%3Breturn%3B%7Dif%20(!ids.length)%20%7B%20status('You%20have%20no%20saved%20posts.')%3B%20return%3B%20%7Dstatus('Found%20'%20%2B%20ids.length%20%2B%20'%20saved%20posts.%20Tap%20%22Unsave%20all%22%20to%20remove%20them.%20Keep%20this%20tab%20open.')%3Bconst%20go%20%3D%20%24('us_go')%3Bgo.disabled%20%3D%20false%3B%20go.style.opacity%20%3D%201%3Basync%20function%20unsave(pk)%20%7Bfor%20(const%20url%20of%20%5B'%2Fapi%2Fv1%2Fweb%2Fsave%2F'%20%2B%20pk%20%2B%20'%2Funsave%2F'%2C%20'%2Fweb%2Fsave%2F'%20%2B%20pk%20%2B%20'%2Funsave%2F'%5D)%20%7Bconst%20r%20%3D%20await%20fetch(url%2C%20%7Bmethod%3A%20'POST'%2C%20credentials%3A%20'include'%2Cheaders%3A%20Object.assign(%7B%20'Content-Type'%3A%20'application%2Fx-www-form-urlencoded'%20%7D%2C%20H)%2C%7D)%3Bif%20(r.status%20%3D%3D%3D%20404)%20continue%3Bif%20(r.status%20%3D%3D%3D%20429)%20throw%20new%20Error('rate')%3Bconst%20j%20%3D%20await%20r.json().catch(()%20%3D%3E%20(%7B%7D))%3Bif%20(j.feedback_required%20%7C%7C%20j.spam)%20throw%20new%20Error('rate')%3Breturn%20r.ok%20%26%26%20j.status%20%3D%3D%3D%20'ok'%3B%7Dreturn%20false%3B%7Dgo.onclick%20%3D%20async%20()%20%3D%3E%20%7Bgo.disabled%20%3D%20true%3B%20go.style.opacity%20%3D%20.5%3B%24('us_x').textContent%20%3D%20'Stop'%3B%24('us_x').onclick%20%3D%20()%20%3D%3E%20%7B%20stop%20%3D%20true%3B%20%7D%3Blet%20done%20%3D%200%2C%20failed%20%3D%200%3Bfor%20(let%20i%20%3D%200%3B%20i%20%3C%20ids.length%20%26%26%20!stop%3B%20i%2B%2B)%20%7Btry%20%7B%20(await%20unsave(ids%5Bi%5D))%20%3F%20done%2B%2B%20%3A%20failed%2B%2B%3B%20%7Dcatch%20(e)%20%7Bstatus('Instagram%20is%20limiting%20requests.%20Stopped%20after%20'%20%2B%20done%20%2B%20'%20unsaved.%20Wait%20an%20hour%2C%20reload%2C%20and%20run%20it%20again.')%3Bbreak%3B%7D%24('us_b').style.width%20%3D%20((i%20%2B%201)%20%2F%20ids.length%20*%20100)%20%2B%20'%25'%3Bstatus('Unsaved%20'%20%2B%20done%20%2B%20'%20of%20'%20%2B%20ids.length%20%2B%20(failed%20%3F%20'%20('%20%2B%20failed%20%2B%20'%20failed)'%20%3A%20'')%20%2B%20'%E2%80%A6%20keep%20this%20tab%20open.')%3Bawait%20sleep(1500%20%2B%20Math.random()%20*%201500)%3B%7Dif%20(!%2Flimiting%2F.test(%24('us_s').textContent))status((stop%20%3F%20'Stopped.%20'%20%3A%20'Done.%20')%20%2B%20'Unsaved%20'%20%2B%20done%20%2B%20'%20post'%20%2B%20(done%20%3D%3D%3D%201%20%3F%20''%20%3A%20's')%20%2B%20(failed%20%3F%20'%2C%20'%20%2B%20failed%20%2B%20'%20failed'%20%3A%20'')%20%2B%20'.%20Reload%20to%20check%2C%20and%20run%20again%20if%20any%20are%20left.')%3B%24('us_x').textContent%20%3D%20'Close'%3B%24('us_x').onclick%20%3D%20()%20%3D%3E%20box.remove()%3B%7D%3B%7D)()%3B";
+const ta = document.getElementById('code');
+ta.value = CODE;
+document.getElementById('copyBtn').addEventListener('click', () => {
+  const msg = document.getElementById('copied');
+  const fallback = () => { ta.focus(); ta.select(); ta.setSelectionRange(0, CODE.length); msg.textContent = 'Text selected. Tap Copy in the menu.'; };
+  try {
+    navigator.clipboard.writeText(CODE).then(() => { msg.textContent = 'Copied. Now follow step 2.'; }, fallback);
+  } catch (e) { fallback(); }
+});
+for (const [tab, panel, other, otherPanel] of [['tab-ios','ios','tab-and','and'],['tab-and','and','tab-ios','ios']]) {
+  document.getElementById(tab).addEventListener('click', () => {
+    document.getElementById(tab).setAttribute('aria-selected','true');
+    document.getElementById(other).setAttribute('aria-selected','false');
+    document.getElementById(panel).hidden = false;
+    document.getElementById(otherPanel).hidden = true;
+  });
+}
+if (/Android/i.test(navigator.userAgent)) document.getElementById('tab-and').click();
+</script>
