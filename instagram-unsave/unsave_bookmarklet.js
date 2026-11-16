@@ -3,6 +3,7 @@
 // browser session, so no password is ever entered or sent anywhere.
 // Saved audio/music lives in a separate list and is not touched.
 (async () => {
+ try {
   if (!/(^|\.)instagram\.com$/.test(location.hostname)) {
     alert('Open instagram.com in this browser, log in, then run this again.');
     return;
@@ -90,4 +91,5 @@
     $('us_x').textContent = 'Close';
     $('us_x').onclick = () => box.remove();
   };
+ } catch (e) { alert('Unsave error: ' + (e && e.message || e)); }
 })();
